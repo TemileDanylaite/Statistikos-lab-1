@@ -5,23 +5,19 @@ date: "2025-03-12"
 output:
 ---
 
-#1. Aprašykite nagrinėjamo a.d. skirstinį. Pateikite pavyzdžių, kur jis taikomas.
+### 1. Aprašykite nagrinėjamo a.d. skirstinį. Pateikite pavyzdžių, kur jis taikomas.
 
 Logistinis skirstinys
 
-#2. Užrašykite nagrinėjamo a.d. pasiskirstymo ir tankio funkcijas (tolydžiu atveju) arba tikimybes (diskrečiu atveju).
+### 2. Užrašykite nagrinėjamo a.d. pasiskirstymo ir tankio funkcijas (tolydžiu atveju) arba tikimybes (diskrečiu atveju).
 
-Pasiskirstymo funkcija
-
-$$
+Pasiskirstymo funkcija: $$
 F(x) = \frac{1}{1 + e^{-\frac{(x - \mu)}{\sigma}}}
-$$ Tankis:
-
-$$
+$$ Tankio funkcija: $$
 f(x) = \frac{\sigma^{-1} e^{(x-\mu)/\sigma}}{(1 + e^{(x-\mu)/\sigma})^2}
 $$
 
-#3. Užrašykite kam lygūs šio a.d. vidurkis, dispersija asimetrijos ir eksceso koeficientai.
+### 3. Užrašykite kam lygūs šio a.d. vidurkis, dispersija asimetrijos ir eksceso koeficientai.
 
 • Vidurkis $\mu$
 
@@ -31,17 +27,17 @@ $$
 
 • Eksceso koeficientas 6/5
 
-#4. Išbrėžkite a.d. tankio (tikimybių) ir pasiskirstymo funkcijos grafikus su skirtingais parametrų rinkiniais. Kaip parametrai keičia tankio funkcijų (tikimybių) formas?
+### 4. Išbrėžkite a.d. tankio (tikimybių) ir pasiskirstymo funkcijos grafikus su skirtingais parametrų rinkiniais. Kaip parametrai keičia tankio funkcijų (tikimybių) formas?
 
-#Pasirinkti parametrų rinkiniai:
+Pasirinkti parametrų rinkiniai:
 
+```         
 location = 0, scale = 1;
-
-location =4 , scale = 2;
-
+location = 4 , scale = 2;
 location = 8, scale = 3.
+```
 
-#Tankio grafikų vizualizavimas
+Tankio grafikų vizualizavimas
 
 ```{r}
 x <- -10:20
@@ -56,7 +52,7 @@ plot(x, dlogis(x, location = 4, scale = 2), type = "h", col = "darkblue")
 plot(x, dlogis(x, location = 8, scale = 3), type = "h", col = "darkblue")
 ```
 
-#Pasiskirstymo grafikų vizualizavimas
+Pasiskirstymo grafikų vizualizavimas
 
 ```{r}
 x <- seq(-10, 20, by=0.05)
@@ -73,7 +69,7 @@ plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
 
 Kaip pasikeicia???
 
-#5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
+### 5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
 
 ```{r}
 p <- seq(0.05,0.95,by = 0.05)
@@ -90,7 +86,7 @@ plot(p, qlogis(p, location = 8, scale = 3), type = "h", col = "darkblue")
 
 kaip keiciasi?
 
-#6. Fiksuokite vieną, pasirinktą a.d. parametrų rinkinį. Sugeneruokite iš savo skirstinio duomenų rinkinius su 20, 50, 200, 1000 imčių dydžiais:
+### 6. Fiksuokite vieną, pasirinktą a.d. parametrų rinkinį. Sugeneruokite iš savo skirstinio duomenų rinkinius su 20, 50, 200, 1000 imčių dydžiais:
 
 ```{r}
 location <- 4
@@ -106,7 +102,7 @@ set.seed(58)
 x4<-rlogis(n[4], location, scale)
 ```
 
-#6.1 Nubrėžkite histogramas (stulpelių diagramas).
+#### 6.1 Nubrėžkite histogramas (stulpelių diagramas).
 
 ```{r}
 library(ggplot2)
@@ -143,7 +139,7 @@ histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
 histograma4
 ```
 
-#6.2 Nubrėžkite empirines pasiskirstymo funkcijas.
+#### 6.2 Nubrėžkite empirines pasiskirstymo funkcijas.
 
 ```{r}
 ex1 <- ecdf(x1)
@@ -165,7 +161,7 @@ ex4 <- ecdf(x4)
 plot(ex4)
 ```
 
-#6.3 Raskite empirinį vidurkį, dispersiją, standartinį nuokrypį, asimetrijos ir eksceso koeficientus. Palyginti šias charakteristikas su tikromis reikšmėmis.
+#### 6.3 Raskite empirinį vidurkį, dispersiją, standartinį nuokrypį, asimetrijos ir eksceso koeficientus. Palyginti šias charakteristikas su tikromis reikšmėmis.
 
 ```{r}
 library(e1071)
@@ -205,16 +201,16 @@ skewness(x4)
 kurtosis(x4)
 ```
 
-#7. Apskaičiuokite a.d. parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
+### 7. Apskaičiuokite a.d. parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
 
-#A.d. parametrų momentų metodo įvertiniai
+A.d. parametrų momentų metodo įvertiniai
 
 ```{r}
 
 
 ```
 
-#momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
+Momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
 
 ```{r}
 
@@ -273,7 +269,7 @@ hat_mu
 hat_s
 ```
 
-#8. Naudodamiesi R raskite didžiausio tikėtinumo metodo parametrų įverčius 6 dalyje sugeneruotoms imtims.
+### 8. Naudodamiesi R raskite didžiausio tikėtinumo metodo parametrų įverčius 6 dalyje sugeneruotoms imtims.
 
 ```{r}
 library(maxLik)
@@ -342,25 +338,25 @@ stdEr(mle)
 
 ```
 
-#9. Palyginkite 7 ir 8 dalyse gautus įverčius su tikraisiais parametrais.
+### 9. Palyginkite 7 ir 8 dalyse gautus įverčius su tikraisiais parametrais.
 
 ```{r}
 
 ```
 
-#10. Raskite parametrų pasikliautinus intervalus bei apskaičiuokite juos 6 dalyje sugeneruotiems duomenims.
+### 10. Raskite parametrų pasikliautinus intervalus bei apskaičiuokite juos 6 dalyje sugeneruotiems duomenims.
 
 ```{r}
 
 ```
 
-#11. Apskaičiuokite 6 dalyje sugeneruotiems duomenims kvartilius.
+### 11. Apskaičiuokite 6 dalyje sugeneruotiems duomenims kvartilius.
 
 ```{r}
 
 ```
 
-#12. Pridėkite 5 išsiskiriančius stebėjimus 6 dalyje sugeneruotiems duomenims.
+### 12. Pridėkite 5 išsiskiriančius stebėjimus 6 dalyje sugeneruotiems duomenims.
 
 ```{r}
 
@@ -399,7 +395,7 @@ table(x4)
 table(x44)
 ```
 
-#13. Išbrėžkite stačiakampes diagramas. Ar jos identifikuoja tas pačias išskirtis?
+### 13. Išbrėžkite stačiakampes diagramas. Ar jos identifikuoja tas pačias išskirtis?
 
 ```{r}
 boxplot(x1)
@@ -427,13 +423,13 @@ boxplot(x44)$out
 
 Isskirtys?
 
-#14. Palyginkite 6 dalyje sugeneruotų duomenų histogramas (tikimybes) su normaliojo skirstinio tankiu (Puasono skirstinio tikimybėmis).
+## 14. Palyginkite 6 dalyje sugeneruotų duomenų histogramas (tikimybes) su normaliojo skirstinio tankiu (Puasono skirstinio tikimybėmis).
 
 ```{r}
 
 ```
 
-#15. Papildoma užduotis
+### 15. Papildoma užduotis
 
 ```{r}
 
