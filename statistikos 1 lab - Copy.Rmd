@@ -58,6 +58,11 @@ plot(x, dlogis(x, location = 4, scale = 2), type = "h", col = "darkblue")
 plot(x, dlogis(x, location = 8, scale = 3), type = "h", col = "darkblue")
 ```
 
+Iš aukščiau pateiktų grafikų matome, kad:
+
+1.  Parametras μ (location) nustato kreivės centro poziciją (vidurkį).
+2.  Parametras σ (scale) keičio skirstinio plotį - didesnis σ reiškia platesnį skirstinį su žemesne viršūne.
+
 Pasiskirstymo grafikų vizualizavimas
 
 ```{r}
@@ -72,8 +77,6 @@ plot(x, plogis(x, location = 4, scale = 2), type = "l", col = "darkblue")
 ```{r}
 plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
 ```
-
-Kaip pasikeicia???
 
 ### 5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
 
