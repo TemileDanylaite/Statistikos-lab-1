@@ -125,6 +125,7 @@ scale <- 2
 n<-c(20, 50, 200, 1000)
 set.seed(58)
 x1<-rlogis(n[1], location, scale)
+# man atrodo nereikia kiekvieną kartą set.seed rašyti
 set.seed(58)
 x2<-rlogis(n[2], location, scale)
 set.seed(58)
@@ -137,36 +138,81 @@ x4<-rlogis(n[4], location, scale)
 
 ```{r}
 library(ggplot2)
+
+# Binwidth nustatymas pagal Freedman-Diaconis taisyklę
+binwidth1 <- 0.5
+binwidth2 <- 0.5
+binwidth3 <- 0.5
+binwidth4 <- 0.5
+
+# Teorinio tankio funkcija
+logistine_tankio_f <- function(x, loc=4, sc=2) {
+  dlogis(x, location=loc, scale=sc)
+}
+
+# Histograma n=20
 histograma1 <- ggplot(data.frame(x1), aes(x=x1)) +
-  geom_histogram(aes(y=after_stat(density)), binwidth = 1,
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = binwidth1,
                  colour="black", fill="white") +
-  geom_density(alpha=.2, fill="darkblue")
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", size=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=20)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
 histograma1
 ```
 
+# Histograma n=50
 ```{r}
-
 histograma2 <- ggplot(data.frame(x2), aes(x=x2)) +
-  geom_histogram(aes(y=after_stat(density)), binwidth = 1,
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = binwidth2,
                  colour="black", fill="white") +
-  geom_density(alpha=.2, fill="darkblue")
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", size=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=50)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
 histograma2
 ```
 
+# Histograma n=200
 ```{r}
 histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
-  geom_histogram(aes(y=after_stat(density)), binwidth = 0.5,
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = binwidth3,
                  colour="black", fill="white") +
-  geom_density(alpha=.2, fill="darkblue")
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", size=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=200)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
 histograma3
 ```
-
+# Histograma n=1000
 ```{r}
-
 histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
-  geom_histogram(aes(y=after_stat(density)), binwidth = 0.5,
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = binwidth4,
                  colour="black", fill="white") +
-  geom_density(alpha=.2, fill="darkblue")
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", size=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=1000)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
 histograma4
 ```
 
