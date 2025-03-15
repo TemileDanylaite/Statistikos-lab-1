@@ -363,7 +363,7 @@ kable(stats_table,
 ```
 
 ```{r}
-# Paprastas palyginimo grafikas vidurkiui
+# Palyginimo grafikas vidurkiui
 barplot(c(stats_table$Theoretical[1], 
           stats_table$n_20[1], 
           stats_table$n_50[1], 
@@ -376,14 +376,74 @@ barplot(c(stats_table$Theoretical[1],
 abline(h = theoretical_mean, col = "red", lty = 2)
 ```
 
-### 7. Apskaičiuokite a.d. parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
+### 7. Apskaičiuokite atsitiktinio dydžio parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
 
-A.d. parametrų momentų metodo įvertiniai
+Logistinio skirstinio momentų metodo įvertiniai išvedami iš teorinių skirstinio momentų. Žinome, kad logistinio skirstinio su parametrais μ (location) ir σ (scale):
+- Vidurkis = μ
+- Dispersija = π²σ²/3
+
+Taigi, momentų metodo įvertiniai yra:
+- μ̂ = x̄ (imties vidurkis)
+- σ̂ = √(3s²/π²), kur s² yra imties dispersija
 
 ```{r}
+# Funkcija momentų metodo įvertiniams apskaičiuoti
+MM_logistic <- function(x) {
+  m_logistic <- mean(x)      # Imties vidurkis
+  s_logistic <- var(x)       # Imties dispersija
+  
+  # Momentų metodo įvertiniai
+  hat_mu <- m_logistic                   # Vidurkio įvertinys
+  hat_sigma <- sqrt(3 * s_logistic / pi^2)  # Scale parametro įvertinys
+  
+  return(c(location = hat_mu, scale = hat_sigma))
+}
 
+# Bootstrap metodas MM įvertinių patikimumo įvertinimui
+# Pasirenkame didžiausią imtį (n=1000) geresniam patikimumui
+set.seed(58)
+bootstrap_samples <- replicate(1000, sample(x4, size = length(x4), replace = TRUE))
+bootstrap_estimates <- t(apply(bootstrap_samples, 2, MM_logistic))
 
 ```
+
+```{r}
+# Vizualizuojame bootstrap rezultatus
+par(mfrow=c(1,2))
+boxplot(bootstrap_estimates[,1], main = "Location (μ)", col = "lightblue")
+abline(h = 4, col = "red", lty = 2)  # Tikroji μ reikšmė
+boxplot(bootstrap_estimates[,2], main = "Scale (σ)", col = "lightgreen")
+abline(h = 2, col = "red", lty = 2)  # Tikroji σ reikšmė
+par(mfrow=c(1,1))
+```
+```{r}
+# Skaičiuojame bootstrap pasikliautinus intervalus (95%)
+location_ci <- quantile(bootstrap_estimates[,1], c(0.025, 0.975))
+scale_ci <- quantile(bootstrap_estimates[,2], c(0.025, 0.975))
+
+# Spausdiname rezultatus
+cat("Bootstrap 95% pasikliautini intervalai:\n")
+cat("Location (μ): [", round(location_ci[1], 4), ", ", round(location_ci[2], 4), "]\n")
+cat("Scale (σ): [", round(scale_ci[1], 4), ", ", round(scale_ci[2], 4), "]\n")
+```
+
+
+```{r}
+# Momentų metodo įvertiniai x1 imčiai (n=20)
+MM_logistic(x1)
+
+# Momentų metodo įvertiniai x2 imčiai (n=50)
+MM_logistic(x2)
+
+# Momentų metodo įvertiniai x3 imčiai (n=200)
+MM_logistic(x3)
+
+# Momentų metodo įvertiniai x4 imčiai (n=1000)
+MM_logistic(x4)
+
+```
+
+-------
 
 Momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
 
