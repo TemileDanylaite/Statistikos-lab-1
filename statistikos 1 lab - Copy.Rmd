@@ -166,7 +166,7 @@ histograma1 <- ggplot(data.frame(x1), aes(x=x1)) +
 histograma1
 ```
 
-# Histograma n=50
+Histograma n=50
 ```{r}
 histograma2 <- ggplot(data.frame(x2), aes(x=x2)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -183,7 +183,7 @@ histograma2 <- ggplot(data.frame(x2), aes(x=x2)) +
 histograma2
 ```
 
-# Histograma n=200
+Histograma n=200
 ```{r}
 histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -199,7 +199,7 @@ histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
   theme_minimal()
 histograma3
 ```
-# Histograma n=1000
+Histograma n=1000
 ```{r}
 histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -218,24 +218,66 @@ histograma4
 
 #### 6.2 Nubrėžkite empirines pasiskirstymo funkcijas.
 
+Pirmoji imtis (n=20)
 ```{r}
-ex1 <- ecdf(x1)
-plot(ex1)
-```
+# Apibrėžiame intervalą x ašiai
+x_range <- seq(-10, 20, by=0.1)
 
+ex1 <- ecdf(x1)
+plot(ex1, main="Empirinė pasiskirstymo funkcija (n=20)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+# Pridedame teorinę pasiskirstymo funkciją
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+# Pridedame legendą
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
+```
+Antroji imtis (n=50)
 ```{r}
 ex2 <- ecdf(x2)
-plot(ex2)
+plot(ex2, main="Empirinė pasiskirstymo funkcija (n=50)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
 ```
-
+# Trečioji imtis (n=200)
 ```{r}
 ex3 <- ecdf(x3)
-plot(ex3)
+plot(ex3, main="Empirinė pasiskirstymo funkcija (n=200)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
 ```
-
+Ketvirtoji imtis (n=1000)
 ```{r}
 ex4 <- ecdf(x4)
-plot(ex4)
+plot(ex4, main="Empirinė pasiskirstymo funkcija (n=1000)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
 ```
 
 #### 6.3 Raskite empirinį vidurkį, dispersiją, standartinį nuokrypį, asimetrijos ir eksceso koeficientus. Palyginti šias charakteristikas su tikromis reikšmėmis.
