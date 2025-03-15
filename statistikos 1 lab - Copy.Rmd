@@ -80,20 +80,42 @@ plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
 
 ### 5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
 
+Logistinio skirstinio kvantilių funkcija yra išreikšta formule[^3]:
+
+[^3]: <https://en.wikipedia.org/wiki/Logistic_distribution>
+
+$$Q(p) = \mu + \sigma \ln\left(\frac{p}{1-p}\right)$$
+
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   $p$ yra tikimybė $(0 < p < 1)$
+
 ```{r}
 p <- seq(0.05,0.95,by = 0.05)
 plot(p, qlogis(p, location = 0, scale = 1), type = "h", col = "darkblue")
 ```
 
 ```{r}
-plot(p, qlogis(p, location = 4, scale = 2), type = "h", col = "darkblue")
+plot(p, qlogis(p, location = 0, scale = 2), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(p, qlogis(p, location = 2, scale = 1), type = "h", col = "darkblue")
 ```
 
 ```{r}
 plot(p, qlogis(p, location = 8, scale = 3), type = "h", col = "darkblue")
 ```
 
-kaip keiciasi?
+Keičiant logistinio skirstinio parametrus, kvantilių funkcija keičiasi šiais būdais:
+
+-   Parametras μ (location) perstumia visą kreivę aukštyn arba žemyn, nepakeisdamas kreivės formos. Šis parametras yra lygus medianai (kai p = 0.5).
+
+-   Parametras σ (scale) keičia kreivės statumą - didesnis σ reiškia lėtesnį kilimą ties mediana ir didesnį reikšmių išsisklaidymą. Su mažesniu σ gaunamos statesnes kreives.
 
 ### 6. Fiksuokite vieną, pasirinktą a.d. parametrų rinkinį. Sugeneruokite iš savo skirstinio duomenų rinkinius su 20, 50, 200, 1000 imčių dydžiais:
 
