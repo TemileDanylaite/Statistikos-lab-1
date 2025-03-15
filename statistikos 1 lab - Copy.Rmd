@@ -320,6 +320,62 @@ skewness(x4)
 kurtosis(x4)
 ```
 
+ChatGPT kodas:
+```{r}
+library(e1071)
+library(knitr)
+
+# Teorinės logistinio skirstinio reikšmės su parametrais location=4, scale=2
+theoretical_mean <- 4  # vidurkis = μ
+theoretical_var <- (pi^2 * 2^2)/3  # dispersija = (π^2 * σ^2)/3
+theoretical_sd <- sqrt(theoretical_var)  # standartinis nuokrypis
+theoretical_skewness <- 0  # asimetrijos koeficientas
+theoretical_kurtosis <- 1.2  # eksceso koeficientas = 6/5
+
+# Sukuriame duomenų rėmelį palyginimui
+stats_table <- data.frame(
+  Metric = c("Vidurkis", "Dispersija", "Standartinis nuokrypis",
+             "Asimetrijos koef.", "Eksceso koef."),
+  Theoretical = c(theoretical_mean, theoretical_var, theoretical_sd,
+                 theoretical_skewness, theoretical_kurtosis),
+  n_20 = c(mean(x1), var(x1), sd(x1), skewness(x1), kurtosis(x1)),
+  n_50 = c(mean(x2), var(x2), sd(x2), skewness(x2), kurtosis(x2)),
+  n_200 = c(mean(x3), var(x3), sd(x3), skewness(x3), kurtosis(x3)),
+  n_1000 = c(mean(x4), var(x4), sd(x4), skewness(x4), kurtosis(x4))
+)
+
+# Pridedame skirtumo stulpelius
+stats_table$diff_20 <- round(abs(stats_table$n_20 - stats_table$Theoretical), 4)
+stats_table$diff_50 <- round(abs(stats_table$n_50 - stats_table$Theoretical), 4)
+stats_table$diff_200 <- round(abs(stats_table$n_200 - stats_table$Theoretical), 4)
+stats_table$diff_1000 <- round(abs(stats_table$n_1000 - stats_table$Theoretical), 4)
+```
+
+```{r}
+# Formatuojame lentelę
+kable(stats_table, 
+      caption = "Empirinių ir teorinių statistikų palyginimas",
+      col.names = c("Statistika", "Teorinė reikšmė", 
+                    "n=20", "n=50", "n=200", "n=1000", 
+                    "Skirtumas (n=20)", "Skirtumas (n=50)", 
+                    "Skirtumas (n=200)", "Skirtumas (n=1000)"),
+      digits = 4)
+```
+
+```{r}
+# Paprastas palyginimo grafikas vidurkiui
+barplot(c(stats_table$Theoretical[1], 
+          stats_table$n_20[1], 
+          stats_table$n_50[1], 
+          stats_table$n_200[1], 
+          stats_table$n_1000[1]),
+        names.arg = c("Teorinis", "n=20", "n=50", "n=200", "n=1000"),
+        col = c("red", rep("blue", 4)),
+        main = "Empirinio vidurkio palyginimas su teoriniu",
+        ylab = "Vidurkio reikšmė")
+abline(h = theoretical_mean, col = "red", lty = 2)
+```
+
 ### 7. Apskaičiuokite a.d. parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
 
 A.d. parametrų momentų metodo įvertiniai
