@@ -573,6 +573,110 @@ stdEr(mle)
 
 ```
 
+chatgpt kodas:
+
+```{r}
+library(maxLik)
+library(knitr)
+
+# Apibrėžiame funkciją, kuri skaičiuoja MLE bet kuriai imčiai
+MLE_logistic <- function(x, starting_values = c(location = 0, scale = 1)) {
+  # Log-tikėtinumo funkcija
+  logLikFun <- function(param) {
+    location <- param[1]
+    scale <- param[2]
+    # Tikriname, ar scale > 0
+    if (scale <= 0) return(-Inf)
+    sum(dlogis(x, location = location, scale = scale, log = TRUE))
+  }
+  
+  # Maksimizuojame log-tikėtinumo funkciją
+  mle <- maxLik(logLik = logLikFun, start = starting_values)
+  
+  # Grąžiname rezultatus
+  return(list(
+    coefficients = coef(mle),
+    standard_errors = stdEr(mle),
+    summary = summary(mle)
+  ))
+}
+
+# Skaičiuojame MLE įvertinius visoms imtims
+# Naudojame 'pradinius spėjimus' arčiau tikrųjų parametrų
+starting_values <- c(location = 3, scale = 1.5)
+
+mle_x1 <- MLE_logistic(x1, starting_values)
+mle_x2 <- MLE_logistic(x2, starting_values)
+mle_x3 <- MLE_logistic(x3, starting_values)
+mle_x4 <- MLE_logistic(x4, starting_values)
+
+# Sukuriame rezultatų lentelę
+mle_results <- data.frame(
+  Sample_Size = c(20, 50, 200, 1000),
+  Location_True = rep(4, 4),
+  Location_MLE = c(mle_x1$coefficients[1], mle_x2$coefficients[1], 
+                  mle_x3$coefficients[1], mle_x4$coefficients[1]),
+  Location_SE = c(mle_x1$standard_errors[1], mle_x2$standard_errors[1],
+                 mle_x3$standard_errors[1], mle_x4$standard_errors[1]),
+  Scale_True = rep(2, 4),
+  Scale_MLE = c(mle_x1$coefficients[2], mle_x2$coefficients[2],
+               mle_x3$coefficients[2], mle_x4$coefficients[2]),
+  Scale_SE = c(mle_x1$standard_errors[2], mle_x2$standard_errors[2],
+              mle_x3$standard_errors[2], mle_x4$standard_errors[2])
+)
+
+# Pridedame absoliučias paklaidas
+mle_results$Location_Error <- abs(mle_results$Location_MLE - mle_results$Location_True)
+mle_results$Scale_Error <- abs(mle_results$Scale_MLE - mle_results$Scale_True)
+
+# Parodome rezultatus
+kable(mle_results, 
+      caption = "Didžiausio tikėtinumo metodo įvertiniai logistiniam skirstiniui",
+      col.names = c("Imties dydis", "μ (tikroji)", "μ̂ (MLE įvertinys)", "μ̂ stand. paklaida",
+                    "σ (tikroji)", "σ̂ (MLE įvertinys)", "σ̂ stand. paklaida",
+                    "μ abs. paklaida", "σ abs. paklaida"),
+      digits = 4)
+```
+
+```{r}
+# Vizualizuojame rezultatus
+par(mfrow = c(1, 2))
+# Vietos parametro įvertiniai
+plot(mle_results$Sample_Size, mle_results$Location_MLE, 
+     type="b", col="blue", pch=19,
+     ylim=c(min(mle_results$Location_MLE) - 1, max(mle_results$Location_MLE) + 1),
+     xlab="Imties dydis", ylab="Vietos parametro įvertinys",
+     main="MLE įvertiniai vietos parametrui")
+# Pridedame tikrąją parametro reikšmę
+abline(h=4, col="red", lty=2)
+# Pridedame pasikliautinus intervalus
+arrows(mle_results$Sample_Size, 
+       mle_results$Location_MLE - 1.96 * mle_results$Location_SE,
+       mle_results$Sample_Size, 
+       mle_results$Location_MLE + 1.96 * mle_results$Location_SE,
+       length=0.05, angle=90, code=3, col="blue")
+legend("topright", legend=c("MLE įvertinys", "Tikroji reikšmė"),
+       col=c("blue", "red"), lty=c(1, 2), pch=c(19, NA))
+
+# Skalės parametro įvertiniai
+plot(mle_results$Sample_Size, mle_results$Scale_MLE, 
+     type="b", col="green", pch=19,
+     ylim=c(min(mle_results$Scale_MLE) - 0.5, max(mle_results$Scale_MLE) + 0.5),
+     xlab="Imties dydis", ylab="Skalės parametro įvertinys",
+     main="MLE įvertiniai skalės parametrui")
+# Pridedame tikrąją parametro reikšmę
+abline(h=2, col="red", lty=2)
+# Pridedame pasikliautinus intervalus
+arrows(mle_results$Sample_Size, 
+       mle_results$Scale_MLE - 1.96 * mle_results$Scale_SE,
+       mle_results$Sample_Size, 
+       mle_results$Scale_MLE + 1.96 * mle_results$Scale_SE,
+       length=0.05, angle=90, code=3, col="green")
+legend("topright", legend=c("MLE įvertinys", "Tikroji reikšmė"),
+       col=c("green", "red"), lty=c(1, 2), pch=c(19, NA))
+par(mfrow = c(1, 1))
+```
+
 ### 9. Palyginkite 7 ir 8 dalyse gautus įverčius su tikraisiais parametrais.
 
 ```{r}
