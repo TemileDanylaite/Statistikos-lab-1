@@ -7,13 +7,19 @@ output:
 
 ### 1. Aprašykite nagrinėjamo a.d. skirstinį. Pateikite pavyzdžių, kur jis taikomas.
 
-Logistinis skirstinys
+Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma panašus į normalųjį pasiskirstymą, centruotas aplink $\mu$, pasiskirstymas priklauso nuo nuo $\sigma$ parametro.[^1] Logistinis skirstinys naudojamas logistinėje regresijoje, augimo modeliavime, siekiant aprašyti gyventojų skaičiaus augimą ir ligų plitimą, taip pat naudojamas neuroniniuose tinkluose, fizikoje, sporto modeliavime ir finansuose.[^2]
+
+[^1]: <https://www.statisticshowto.com/logistic-distribution/>
+
+[^2]: <https://www.sciencedirect.com/topics/mathematics/logistic-distribution>
 
 ### 2. Užrašykite nagrinėjamo a.d. pasiskirstymo ir tankio funkcijas (tolydžiu atveju) arba tikimybes (diskrečiu atveju).
 
-Pasiskirstymo funkcija: $$
+Pasiskirstymo funkcija (reikės parašyti ką reiškia kiekviena raidė): $$
 F(x) = \frac{1}{1 + e^{-\frac{(x - \mu)}{\sigma}}}
-$$ Tankio funkcija: $$
+$$
+
+Tankio funkcija (reikės parašyti ką reiškia kiekviena raidė): $$
 f(x) = \frac{\sigma^{-1} e^{(x-\mu)/\sigma}}{(1 + e^{(x-\mu)/\sigma})^2}
 $$
 
