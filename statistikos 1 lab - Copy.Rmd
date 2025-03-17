@@ -7,11 +7,15 @@ output:
 
 ### 1. Aprašykite nagrinėjamo a.d. skirstinį. Pateikite pavyzdžių, kur jis taikomas.
 
-Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma panašus į normalųjį pasiskirstymą, centruotas aplink $\mu$, pasiskirstymas priklauso nuo nuo $\sigma$ parametro.[^1] Logistinis skirstinys naudojamas logistinėje regresijoje, augimo modeliavime, siekiant aprašyti gyventojų skaičiaus augimą ir ligų plitimą, taip pat naudojamas neuroniniuose tinkluose, fizikoje, sporto modeliavime ir finansuose.[^2]
+Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma panašus į normalųjį pasiskirstymą, centruotas aplink $\mu$, pasiskirstymas priklauso nuo nuo $\sigma$ parametro.[^1] Logistinis skirstinys naudojamas logistinėje regresijoje, augimo modeliavime, siekiant aprašyti gyventojų skaičiaus augimą ir ligų plitimą[^2], taip pat naudojamas neuroniniuose tinkluose, fizikoje, sporto modeliavime[^3] ir finansuose.[^4]
 
 [^1]: <https://www.statisticshowto.com/logistic-distribution/>
 
-[^2]: <https://www.sciencedirect.com/topics/mathematics/logistic-distribution>
+[^2]: <https://doi.org/10.1155/2021/5556433>
+
+[^3]: <https://gwern.net/doc/statistics/order/comparison/1978-elo-theratingofchessplayerspastandpresent.pdf>
+
+[^4]: <https://www.sciencedirect.com/topics/mathematics/logistic-distribution>
 
 ### 2. Užrašykite nagrinėjamo a.d. pasiskirstymo ir tankio funkcijas (tolydžiu atveju) arba tikimybes (diskrečiu atveju).
 
@@ -80,9 +84,9 @@ plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
 
 ### 5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
 
-Logistinio skirstinio kvantilių funkcija yra išreikšta formule[^3]:
+Logistinio skirstinio kvantilių funkcija yra išreikšta formule[^5]:
 
-[^3]: <https://en.wikipedia.org/wiki/Logistic_distribution>
+[^5]: <https://en.wikipedia.org/wiki/Logistic_distribution>
 
 $$Q(p) = \mu + \sigma \ln\left(\frac{p}{1-p}\right)$$
 
@@ -167,6 +171,7 @@ histograma1
 ```
 
 Histograma n=50
+
 ```{r}
 histograma2 <- ggplot(data.frame(x2), aes(x=x2)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -184,6 +189,7 @@ histograma2
 ```
 
 Histograma n=200
+
 ```{r}
 histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -199,7 +205,9 @@ histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
   theme_minimal()
 histograma3
 ```
+
 Histograma n=1000
+
 ```{r}
 histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
   geom_histogram(aes(y=after_stat(density)), 
@@ -219,6 +227,7 @@ histograma4
 #### 6.2 Nubrėžkite empirines pasiskirstymo funkcijas.
 
 Pirmoji imtis (n=20)
+
 ```{r}
 # Apibrėžiame intervalą x ašiai
 x_range <- seq(-10, 20, by=0.1)
@@ -237,7 +246,9 @@ legend("bottomright",
        lty=c(1, 2), 
        lwd=c(2, 2))
 ```
+
 Antroji imtis (n=50)
+
 ```{r}
 ex2 <- ecdf(x2)
 plot(ex2, main="Empirinė pasiskirstymo funkcija (n=50)", 
@@ -251,7 +262,9 @@ legend("bottomright",
        lty=c(1, 2), 
        lwd=c(2, 2))
 ```
+
 # Trečioji imtis (n=200)
+
 ```{r}
 ex3 <- ecdf(x3)
 plot(ex3, main="Empirinė pasiskirstymo funkcija (n=200)", 
@@ -265,7 +278,9 @@ legend("bottomright",
        lty=c(1, 2), 
        lwd=c(2, 2))
 ```
+
 Ketvirtoji imtis (n=1000)
+
 ```{r}
 ex4 <- ecdf(x4)
 plot(ex4, main="Empirinė pasiskirstymo funkcija (n=1000)", 
@@ -321,6 +336,7 @@ kurtosis(x4)
 ```
 
 ChatGPT kodas:
+
 ```{r}
 library(e1071)
 library(knitr)
@@ -378,13 +394,9 @@ abline(h = theoretical_mean, col = "red", lty = 2)
 
 ### 7. Apskaičiuokite atsitiktinio dydžio parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
 
-Logistinio skirstinio momentų metodo įvertiniai išvedami iš teorinių skirstinio momentų. Žinome, kad logistinio skirstinio su parametrais μ (location) ir σ (scale):
-- Vidurkis = μ
-- Dispersija = π²σ²/3
+Logistinio skirstinio momentų metodo įvertiniai išvedami iš teorinių skirstinio momentų. Žinome, kad logistinio skirstinio su parametrais μ (location) ir σ (scale): - Vidurkis = μ - Dispersija = π²σ²/3
 
-Taigi, momentų metodo įvertiniai yra:
-- μ̂ = x̄ (imties vidurkis)
-- σ̂ = √(3s²/π²), kur s² yra imties dispersija
+Taigi, momentų metodo įvertiniai yra: - μ̂ = x̄ (imties vidurkis) - σ̂ = √(3s²/π²), kur s² yra imties dispersija
 
 ```{r}
 # Funkcija momentų metodo įvertiniams apskaičiuoti
@@ -416,6 +428,7 @@ boxplot(bootstrap_estimates[,2], main = "Scale (σ)", col = "lightgreen")
 abline(h = 2, col = "red", lty = 2)  # Tikroji σ reikšmė
 par(mfrow=c(1,1))
 ```
+
 ```{r}
 # Skaičiuojame bootstrap pasikliautinus intervalus (95%)
 location_ci <- quantile(bootstrap_estimates[,1], c(0.025, 0.975))
@@ -426,7 +439,6 @@ cat("Bootstrap 95% pasikliautini intervalai:\n")
 cat("Location (μ): [", round(location_ci[1], 4), ", ", round(location_ci[2], 4), "]\n")
 cat("Scale (σ): [", round(scale_ci[1], 4), ", ", round(scale_ci[2], 4), "]\n")
 ```
-
 
 ```{r}
 # Momentų metodo įvertiniai x1 imčiai (n=20)
@@ -443,7 +455,7 @@ MM_logistic(x4)
 
 ```
 
--------
+------------------------------------------------------------------------
 
 Momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
 
@@ -770,6 +782,29 @@ Isskirtys?
 
 ### 15. Papildoma užduotis
 
-```{r}
+Duomenys iš: <https://www.sciencedirect.com/science/article/pii/S2352340918300283?via%3Dihub>
 
+Reakcijos laiko duomenys buvo surinkti naudojant specialiai sukurtą lentą, kurios keturiuose kampuose buvo po LED lemputę ir mygtuką. Dalyvio buvo prašoma kuo greičiau paspausti mygtuką, prie kurio įsižiebė LED lemputė. Duomenys atitinka kiekvieno dalyvio vidutinį reakcijos laiką, apskaičiuotą iš 16 bandymų.
+
+```{r}
+duom <- read.csv("reaction_times.csv")
+
+x <- seq(200, 1600)
+vid <- mean(duom$time)
+scale <- sd(duom$time) / 1.8138
+
+hist(duom$time, breaks = seq(200, 1600, by = 20), prob = TRUE,
+     main="Dalyvių pagal vidutinį reakcijos laiką pasiskirstymas",
+     xlab="Vidutinis reakcijos laikas (ms)",
+     ylab="Tankis")
+lines(x, dlogis(x, location = vid, scale = scale), col = 2, lwd = 2)
+lines(x, dnorm(x, vid, sd(duom$time)), col = 4, lwd = 2)
+legend(200, 0.004, legend=c("Logistinis", "Normalusis"),
+       col=c(2, 4), lty=1:1, cex=0.8)
 ```
+
+Lyginant normalųjį ir logistinį skirstinius matome, kad pastarasis tiksliau atitinka duomenų pasiskirstymą:
+
+-   Viršūnė yra aukščiau nei normaliojo ir arčiau histogramos formos;
+
+-   Logistinio skirstinio uodegos geriau atspindi retesnius reakcijos laikus.
