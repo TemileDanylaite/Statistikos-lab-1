@@ -5,7 +5,7 @@ date: "2025-03-12"
 output:
 ---
 
-### 1. Aprašykite nagrinėjamo a.d. skirstinį. Pateikite pavyzdžių, kur jis taikomas.
+### 1. Logistinis skirstinys
 
 Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma panašus į normalųjį pasiskirstymą, centruotas aplink $\mu$, pasiskirstymas priklauso nuo nuo $\sigma$ parametro.[^1] Logistinis skirstinys naudojamas logistinėje regresijoje, augimo modeliavime, siekiant aprašyti gyventojų skaičiaus augimą ir ligų plitimą[^2], taip pat naudojamas neuroniniuose tinkluose, fizikoje, sporto modeliavime[^3] ir finansuose.[^4]
 
@@ -17,17 +17,33 @@ Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma pan
 
 [^4]: <https://www.sciencedirect.com/topics/mathematics/logistic-distribution>
 
-### 2. Užrašykite nagrinėjamo a.d. pasiskirstymo ir tankio funkcijas (tolydžiu atveju) arba tikimybes (diskrečiu atveju).
+### 2. Nagrinėjamo a.d. pasiskirstymo ir tankio funkcijos
 
-Pasiskirstymo funkcija (reikės parašyti ką reiškia kiekviena raidė): $$
+Pasiskirstymo funkcija: $$
 F(x) = \frac{1}{1 + e^{-\frac{(x - \mu)}{\sigma}}}
 $$
 
-Tankio funkcija (reikės parašyti ką reiškia kiekviena raidė): $$
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   x yra nepriklausomas kintamasis
+
+Tankio funkcija: $$
 f(x) = \frac{\sigma^{-1} e^{(x-\mu)/\sigma}}{(1 + e^{(x-\mu)/\sigma})^2}
 $$
 
-### 3. Užrašykite kam lygūs šio a.d. vidurkis, dispersija asimetrijos ir eksceso koeficientai.
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   x yra nepriklausomas kintamasis
+
+### 3. Logistinio skirstinio vidurkis, dispersija asimetrijos ir eksceso koeficientai.
 
 • Vidurkis $\mu$
 
@@ -37,7 +53,7 @@ $$
 
 • Eksceso koeficientas 6/5
 
-### 4. Išbrėžkite a.d. tankio (tikimybių) ir pasiskirstymo funkcijos grafikus su skirtingais parametrų rinkiniais. Kaip parametrai keičia tankio funkcijų (tikimybių) formas?
+### 4. Tankio (tikimybių) ir pasiskirstymo funkcijos grafikai su skirtingais parametrų rinkiniais.
 
 Pasirinkti parametrų rinkiniai:
 
@@ -82,7 +98,7 @@ plot(x, plogis(x, location = 4, scale = 2), type = "l", col = "darkblue")
 plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
 ```
 
-### 5. Užrašykite kvantilių funkciją ir išbrėžkite jos grafiką su skirtingais parametrais. Kaip keičiasi kvantilių grafikas, keičiant parametrus?
+### 5. Kvantilių funkcija ir jos grafikas su skirtingais parametrais.
 
 Logistinio skirstinio kvantilių funkcija yra išreikšta formule[^5]:
 
@@ -121,14 +137,14 @@ Keičiant logistinio skirstinio parametrus, kvantilių funkcija keičiasi šiais
 
 -   Parametras σ (scale) keičia kreivės statumą - didesnis σ reiškia lėtesnį kilimą ties mediana ir didesnį reikšmių išsisklaidymą. Su mažesniu σ gaunamos statesnes kreives.
 
-### 6. Fiksuokite vieną, pasirinktą a.d. parametrų rinkinį. Sugeneruokite iš savo skirstinio duomenų rinkinius su 20, 50, 200, 1000 imčių dydžiais:
+### 6. Fiksuojamas vienas, pasirinktas a.d. parametrų rinkinys. Sugeneruojami iš logistinio skirstinio duomenų rinkiniai su 20, 50, 200, 1000 imčių dydžiais:
 
 ```{r}
 location <- 4
 scale <- 2
 n <- c(20, 50, 200, 1000)
 
-# Nustatome vieną seed, kad rezultatai būtų pakartojami
+
 set.seed(58)
 x1 <- rlogis(n[1], location, scale)
 x2 <- rlogis(n[2], location, scale)
@@ -136,7 +152,7 @@ x3 <- rlogis(n[3], location, scale)
 x4 <- rlogis(n[4], location, scale)
 ```
 
-#### 6.1 Nubrėžkite histogramas (stulpelių diagramas).
+#### 6.1 Nubrėžiamos histogramos
 
 Histograma n=20
 
@@ -217,7 +233,7 @@ histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
 histograma4
 ```
 
-#### 6.2 Nubrėžkite empirines pasiskirstymo funkcijas.
+#### 6.2 Nubrėžiamos empirinės pasiskirstymo funkcijos
 
 Pirmoji imtis (n=20)
 
@@ -256,7 +272,7 @@ legend("bottomright",
        lwd=c(2, 2))
 ```
 
-# Trečioji imtis (n=200)
+Trečioji imtis (n=200)
 
 ```{r}
 ex3 <- ecdf(x3)
@@ -288,47 +304,7 @@ legend("bottomright",
        lwd=c(2, 2))
 ```
 
-#### 6.3 Raskite empirinį vidurkį, dispersiją, standartinį nuokrypį, asimetrijos ir eksceso koeficientus. Palyginti šias charakteristikas su tikromis reikšmėmis.
-
-```{r}
-library(e1071)
-
-# rinkinio su 20 imties dydziu
-mean(x1)
-var(x1)
-sd(x1)
-skewness(x1)
-kurtosis(x1) 
-```
-
-```{r}
-# rinkinio su 50 imties dydziu
-mean(x2)
-var(x2)
-sd(x2)
-skewness(x2)
-kurtosis(x2) 
-```
-
-```{r}
-# rinkinio su 200 imties dydziu
-mean(x3)
-var(x3)
-sd(x3)
-skewness(x3)
-kurtosis(x3)
-```
-
-```{r}
-# rinkinio su 1000 imties dydziu
-mean(x4)
-var(x4)
-sd(x4)
-skewness(x4)
-kurtosis(x4)
-```
-
-ChatGPT kodas:
+#### 6.3 Empirinis vidurkis, dispersija, standartinis nuokrypis, asimetrijos ir eksceso koeficientai.
 
 ```{r}
 library(e1071)
@@ -371,7 +347,7 @@ kable(stats_table,
       digits = 4)
 ```
 
-### 7. Apskaičiuokite atsitiktinio dydžio parametro(-ų) momentų metodo įvertinį(-ius) ir raskite momentų metodo įverčius 6 dalyje sugeneruotoms imtims.
+### 7. Apskaičiuojami atsitiktinio dydžio parametrų momentų metodo įvertiniai ir momentų metodo įverčiai 6 dalies sugeneruotoms imtims.
 
 Logistinio skirstinio momentų metodo įvertiniai išvedami iš teorinių skirstinio momentų. Žinome, kad logistinio skirstinio su parametrais μ (location) ir σ (scale): - Vidurkis = μ - Dispersija = π²σ²/3
 
@@ -495,7 +471,7 @@ hat_mu
 hat_s
 ```
 
-### 8. Naudodamiesi R raskite didžiausio tikėtinumo metodo parametrų įverčius 6 dalyje sugeneruotoms imtims.
+### 8. Didžiausio tikėtinumo metodo parametrų įverčiai 6 dalyje sugeneruotoms imtims.
 
 ```{r}
 library(maxLik)
@@ -512,7 +488,6 @@ summary(mle)
 coef(mle)
 stdEr(mle)
 
-#Rezultatas?
 ```
 
 ```{r}
@@ -529,7 +504,6 @@ summary(mle)
 coef(mle)
 stdEr(mle)
 
-#Rezultatas??
 ```
 
 ```{r}
@@ -545,7 +519,6 @@ summary(mle)
 coef(mle)
 stdEr(mle)
 
-#Rezultatas??
 ```
 
 ```{r}
@@ -560,7 +533,6 @@ mle <- maxLik(logLik = logLikFun,
 summary(mle)
 coef(mle)
 stdEr(mle)
-
 
 ```
 
@@ -629,7 +601,7 @@ kable(mle_results,
       digits = 4)
 ```
 
-### 9. Palyginkite 7 ir 8 dalyse gautus įverčius su tikraisiais parametrais.
+### 9. 7 ir 8 dalyse gautų įverčių palyginimas su tikraisiais parametrais.
 
 ```{r}
 library(knitr)
@@ -681,7 +653,7 @@ kable(comparison,
       digits = 4)
 ```
 
-### 10. Raskite parametrų pasikliautinus intervalus bei apskaičiuokite juos 6 dalyje sugeneruotiems duomenims.
+### 10. Parametrų pasikliautiniai intervalai bei jų apskaičiavimas 6 dalyje sugeneruotiems duomenims.
 
 ```{r}
 ## Bootstrap metodas
@@ -732,7 +704,7 @@ bootstrap_results <- data.frame(
 bootstrap_results
 ```
 
-### 11. Apskaičiuokite 6 dalyje sugeneruotiems duomenims kvartilius.
+### 11. Kvartilių apskaičiavimas 6 dalyje sugeneruotiems duomenims.
 
 imtis n = 20
 
@@ -762,7 +734,7 @@ quantile_x4 <- quantile(x4, probs = c(0.25, 0.5, 0.75))
 quantile_x4
 ```
 
-### 12. Pridėkite 5 išsiskiriančius stebėjimus 6 dalyje sugeneruotiems duomenims.
+### 12. Pridedami 5 išsiskiriantys stebėjimai 6 dalyje sugeneruotiems duomenims.
 
 ```{r}
 
@@ -795,34 +767,25 @@ table(x4)
 table(x44)
 ```
 
-### 13. Išbrėžkite stačiakampes diagramas. Ar jos identifikuoja tas pačias išskirtis?
-
-```{r}
-boxplot(x1)
-boxplot(x11)$out
-```
-
-```{r}
-boxplot(x2)
-boxplot(x22)$out
-```
-
-```{r}
-boxplot(x3)
-boxplot(x33)$out
-```
-
-```{r}
-boxplot(x4)
-boxplot(x44)$out
-```
+### 13. Stačiakampės diagramos.
 
 ```{r}
 outliers_x11 <- boxplot(x11)$out
-outliers_x22 <- boxplot(x22)$out
-outliers_x33 <- boxplot(x33)$out
-outliers_x44 <- boxplot(x44)$out
+```
 
+```{r}
+outliers_x22 <- boxplot(x22)$out
+```
+
+```{r}
+outliers_x33 <- boxplot(x33)$out
+```
+
+```{r}
+outliers_x44 <- boxplot(x44)$out
+```
+
+```{r}
 # Atspausdinti visas išskirtis
 cat("x11 išskirtys:", outliers_x11, "\n")
 cat("x22 išskirtys:", outliers_x22, "\n")
@@ -839,13 +802,15 @@ cat("x33:", all(expected_outliers %in% outliers_x33), "\n")
 cat("x44:", all(expected_outliers %in% outliers_x44), "\n")
 ```
 
-## 14. Palyginkite 6 dalyje sugeneruotų duomenų histogramas (tikimybes) su normaliojo skirstinio tankiu (Puasono skirstinio tikimybėmis).
+1-oji, 2-oji ir 3-oji stačiakampės diagramos neidentifikuoja visų pridėtų išskirčių, o 4-oji stačiakampė diagrama jas identifikuoja.
+
+## 14. 6 dalyje sugeneruotų duomenų histogramų (tikimybes) palyginimas su normaliojo skirstinio tankiu (Puasono skirstinio tikimybėmis).
 
 ```{r}
 library(ggplot2)
 
 # Parametrai normaliam skirstiniui
-location <- 4  # tas pats kaip logistiniam
+location <- 4  
 scale_normal <- sd(x4)  # standartinis nuokrypis iš didžiausios imties
 
 # Sukuriame funkcijas normaliojo ir logistinio tankio skaičiavimui
