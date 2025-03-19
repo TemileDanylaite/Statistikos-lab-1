@@ -1,0 +1,826 @@
+---
+title: "Statistikos 1 laboratorinis darbas: Matematinė statistika"
+author: ""
+date: "2025-03-12"
+output:
+---
+
+### 1. Logistinis skirstinys
+
+Logistinis skirstinys yra simetriškas, turi vieną viršūnę ir savo forma panašus į normalųjį pasiskirstymą, centruotas aplink $\mu$, pasiskirstymas priklauso nuo nuo $\sigma$ parametro.[^1] Logistinis skirstinys naudojamas logistinėje regresijoje, augimo modeliavime, siekiant aprašyti gyventojų skaičiaus augimą ir ligų plitimą[^2], taip pat naudojamas neuroniniuose tinkluose, fizikoje, sporto modeliavime[^3] ir finansuose.[^4]
+
+[^1]: <https://www.statisticshowto.com/logistic-distribution/>
+
+[^2]: <https://doi.org/10.1155/2021/5556433>
+
+[^3]: <https://gwern.net/doc/statistics/order/comparison/1978-elo-theratingofchessplayerspastandpresent.pdf>
+
+[^4]: <https://www.sciencedirect.com/topics/mathematics/logistic-distribution>
+
+### 2. Nagrinėjamo a.d. pasiskirstymo ir tankio funkcijos
+
+Pasiskirstymo funkcija: $$
+F(x) = \frac{1}{1 + e^{-\frac{(x - \mu)}{\sigma}}}
+$$
+
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   x yra nepriklausomas kintamasis
+
+Tankio funkcija: $$
+f(x) = \frac{\sigma^{-1} e^{(x-\mu)/\sigma}}{(1 + e^{(x-\mu)/\sigma})^2}
+$$
+
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   x yra nepriklausomas kintamasis
+
+### 3. Logistinio skirstinio vidurkis, dispersija asimetrijos ir eksceso koeficientai.
+
+• Vidurkis $\mu$
+
+• Dispersija $\frac{\pi^2}{3\sigma^2}$
+
+• Asimetrijos koeficientas 0
+
+• Eksceso koeficientas 6/5
+
+### 4. Tankio (tikimybių) ir pasiskirstymo funkcijos grafikai su skirtingais parametrų rinkiniais.
+
+Pasirinkti parametrų rinkiniai:
+
+```         
+location = 0, scale = 1;
+location = 4 , scale = 2;
+location = 8, scale = 3.
+```
+
+Tankio grafikų vizualizavimas
+
+```{r}
+x <- -10:20
+plot(x, dlogis(x, location = 0, scale = 1), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(x, dlogis(x, location = 4, scale = 2), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(x, dlogis(x, location = 8, scale = 3), type = "h", col = "darkblue")
+```
+
+Iš aukščiau pateiktų grafikų matome, kad:
+
+1.  Parametras μ (location) nustato kreivės centro poziciją (vidurkį).
+2.  Parametras σ (scale) keičio skirstinio plotį - didesnis σ reiškia platesnį skirstinį su žemesne viršūne.
+
+Pasiskirstymo grafikų vizualizavimas
+
+```{r}
+x <- seq(-10, 20, by=0.05)
+plot(x, plogis(x, location = 0, scale = 1), type = "l", col = "darkblue")
+```
+
+```{r}
+plot(x, plogis(x, location = 4, scale = 2), type = "l", col = "darkblue")
+```
+
+```{r}
+plot(x, plogis(x, location = 8, scale = 3), type = "l", col = "darkblue")
+```
+
+### 5. Kvantilių funkcija ir jos grafikas su skirtingais parametrais.
+
+Logistinio skirstinio kvantilių funkcija yra išreikšta formule[^5]:
+
+[^5]: <https://en.wikipedia.org/wiki/Logistic_distribution>
+
+$$Q(p) = \mu + \sigma \ln\left(\frac{p}{1-p}\right)$$
+
+kur:
+
+-   $\mu$ yra vietos (location) parametras
+
+-   $\sigma$ yra mastelio (scale) parametras
+
+-   $p$ yra tikimybė $(0 < p < 1)$
+
+```{r}
+p <- seq(0.05,0.95,by = 0.05)
+plot(p, qlogis(p, location = 0, scale = 1), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(p, qlogis(p, location = 0, scale = 2), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(p, qlogis(p, location = 2, scale = 1), type = "h", col = "darkblue")
+```
+
+```{r}
+plot(p, qlogis(p, location = 8, scale = 3), type = "h", col = "darkblue")
+```
+
+Keičiant logistinio skirstinio parametrus, kvantilių funkcija keičiasi šiais būdais:
+
+-   Parametras μ (location) perstumia visą kreivę aukštyn arba žemyn, nepakeisdamas kreivės formos. Šis parametras yra lygus medianai (kai p = 0.5).
+
+-   Parametras σ (scale) keičia kreivės statumą - didesnis σ reiškia lėtesnį kilimą ties mediana ir didesnį reikšmių išsisklaidymą. Su mažesniu σ gaunamos statesnes kreives.
+
+### 6. Fiksuojamas vienas, pasirinktas a.d. parametrų rinkinys. Sugeneruojami iš logistinio skirstinio duomenų rinkiniai su 20, 50, 200, 1000 imčių dydžiais:
+
+```{r}
+location <- 4
+scale <- 2
+n <- c(20, 50, 200, 1000)
+
+
+set.seed(58)
+x1 <- rlogis(n[1], location, scale)
+set.seed(58)
+x2 <- rlogis(n[2], location, scale)
+set.seed(58)
+x3 <- rlogis(n[3], location, scale)
+set.seed(58)
+x4 <- rlogis(n[4], location, scale)
+```
+
+#### 6.1 Nubrėžiamos histogramos
+
+Histograma n=20
+
+```{r}
+library(ggplot2)
+
+# Teorinio tankio funkcija
+logistine_tankio_f <- function(x, loc=4, sc=2) {
+  dlogis(x, location=loc, scale=sc)
+}
+
+histograma1 <- ggplot(data.frame(x1), aes(x=x1)) +
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = 0.5,
+                 colour="black", fill="white") +
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", linewidth=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=20)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
+histograma1
+```
+
+Histograma n=50
+
+```{r}
+histograma2 <- ggplot(data.frame(x2), aes(x=x2)) +
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = 0.5,
+                 colour="black", fill="white") +
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", linewidth=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=50)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
+histograma2
+```
+
+Histograma n=200
+
+```{r}
+histograma3 <- ggplot(data.frame(x3), aes(x=x3)) +
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = 0.5,
+                 colour="black", fill="white") +
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", linewidth=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=200)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
+histograma3
+```
+
+Histograma n=1000
+
+```{r}
+histograma4 <- ggplot(data.frame(x4), aes(x=x4)) +
+  geom_histogram(aes(y=after_stat(density)), 
+                 binwidth = 0.5,
+                 colour="black", fill="white") +
+  geom_density(alpha=.2, fill="darkblue") +
+  stat_function(fun=logistine_tankio_f, 
+                colour="red", linewidth=1, linetype="dashed") +
+  labs(title="Logistinio skirstinio histograma (n=1000)",
+       subtitle="μ=4, σ=2",
+       x="Reikšmė", 
+       y="Tankis") +
+  theme_minimal()
+histograma4
+```
+
+#### 6.2 Nubrėžiamos empirinės pasiskirstymo funkcijos
+
+Pirmoji imtis (n=20)
+
+```{r}
+# Apibrėžiame intervalą x ašiai
+x_range <- seq(-10, 20, by=0.1)
+
+ex1 <- ecdf(x1)
+plot(ex1, main="Empirinė pasiskirstymo funkcija (n=20)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+# Pridedame teorinę pasiskirstymo funkciją
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+# Pridedame legendą
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
+```
+
+Antroji imtis (n=50)
+
+```{r}
+ex2 <- ecdf(x2)
+plot(ex2, main="Empirinė pasiskirstymo funkcija (n=50)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
+```
+
+Trečioji imtis (n=200)
+
+```{r}
+ex3 <- ecdf(x3)
+plot(ex3, main="Empirinė pasiskirstymo funkcija (n=200)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
+```
+
+Ketvirtoji imtis (n=1000)
+
+```{r}
+ex4 <- ecdf(x4)
+plot(ex4, main="Empirinė pasiskirstymo funkcija (n=1000)", 
+     xlab="x", ylab="F(x)", 
+     col="blue", lwd=2)
+lines(x_range, plogis(x_range, location=4, scale=2), 
+      col="red", lty=2, lwd=2)
+legend("bottomright", 
+       legend=c("Empirinė", "Teorinė"), 
+       col=c("blue", "red"), 
+       lty=c(1, 2), 
+       lwd=c(2, 2))
+```
+
+#### 6.3 Empirinis vidurkis, dispersija, standartinis nuokrypis, asimetrijos ir eksceso koeficientai.
+
+```{r}
+library(e1071)
+library(knitr)
+
+# Teorinės logistinio skirstinio reikšmės su parametrais location=4, scale=2
+theoretical_mean <- 4  # vidurkis = μ
+theoretical_var <- (pi^2 * 2^2)/3  # dispersija = (π^2 * σ^2)/3
+theoretical_sd <- sqrt(theoretical_var)  # standartinis nuokrypis
+theoretical_skewness <- 0  # asimetrijos koeficientas
+theoretical_kurtosis <- 1.2  # eksceso koeficientas = 6/5
+
+# Sukuriame duomenų rėmelį palyginimui
+stats_table <- data.frame(
+  Metric = c("Vidurkis", "Dispersija", "Standartinis nuokrypis",
+             "Asimetrijos koef.", "Eksceso koef."),
+  Theoretical = c(theoretical_mean, theoretical_var, theoretical_sd,
+                 theoretical_skewness, theoretical_kurtosis),
+  n_20 = c(mean(x1), var(x1), sd(x1), skewness(x1), kurtosis(x1)),
+  n_50 = c(mean(x2), var(x2), sd(x2), skewness(x2), kurtosis(x2)),
+  n_200 = c(mean(x3), var(x3), sd(x3), skewness(x3), kurtosis(x3)),
+  n_1000 = c(mean(x4), var(x4), sd(x4), skewness(x4), kurtosis(x4))
+)
+
+# Pridedame skirtumo stulpelius
+stats_table$diff_20 <- round(abs(stats_table$n_20 - stats_table$Theoretical), 4)
+stats_table$diff_50 <- round(abs(stats_table$n_50 - stats_table$Theoretical), 4)
+stats_table$diff_200 <- round(abs(stats_table$n_200 - stats_table$Theoretical), 4)
+stats_table$diff_1000 <- round(abs(stats_table$n_1000 - stats_table$Theoretical), 4)
+```
+
+```{r}
+# Formatuojame lentelę
+kable(stats_table, 
+      caption = "Empirinių ir teorinių statistikų palyginimas",
+      col.names = c("Statistika", "Teorinė reikšmė", 
+                    "n=20", "n=50", "n=200", "n=1000", 
+                    "Skirtumas (n=20)", "Skirtumas (n=50)", 
+                    "Skirtumas (n=200)", "Skirtumas (n=1000)"),
+      digits = 4)
+```
+
+### 7. Apskaičiuojami atsitiktinio dydžio parametrų momentų metodo įvertiniai ir momentų metodo įverčiai 6 dalies sugeneruotoms imtims.
+
+Logistinio skirstinio momentų metodo įvertiniai išvedami iš teorinių skirstinio momentų. Žinome, kad logistinio skirstinio su parametrais μ (location) ir σ (scale): - Vidurkis = μ - Dispersija = π²σ²/3
+
+Taigi, momentų metodo įvertiniai yra: - μ̂ = x̄ (imties vidurkis) - σ̂ = √(3s²/π²), kur s² yra imties dispersija
+
+```{r}
+# Funkcija momentų metodo įvertiniams apskaičiuoti
+MM_logistic <- function(x) {
+  m_logistic <- mean(x)      # Imties vidurkis
+  s_logistic <- var(x)       # Imties dispersija
+  
+  # Momentų metodo įvertiniai
+  hat_mu <- m_logistic                   # Vidurkio įvertinys
+  hat_sigma <- sqrt(3 * s_logistic / pi^2)  # Scale parametro įvertinys
+  
+  return(c(location = hat_mu, scale = hat_sigma))
+}
+
+# Bootstrap metodas MM įvertinių patikimumo įvertinimui
+# Pasirenkame didžiausią imtį (n=1000) geresniam patikimumui
+set.seed(58)
+bootstrap_samples <- replicate(1000, sample(x4, size = length(x4), replace = TRUE))
+bootstrap_estimates <- t(apply(bootstrap_samples, 2, MM_logistic))
+
+```
+
+```{r}
+# Vizualizuojame bootstrap rezultatus
+par(mfrow=c(1,2))
+boxplot(bootstrap_estimates[,1], main = "Location (μ)", col = "lightblue")
+abline(h = 4, col = "red", lty = 2)  # Tikroji μ reikšmė
+boxplot(bootstrap_estimates[,2], main = "Scale (σ)", col = "lightgreen")
+abline(h = 2, col = "red", lty = 2)  # Tikroji σ reikšmė
+par(mfrow=c(1,1))
+```
+
+```{r}
+# Skaičiuojame bootstrap pasikliautinus intervalus (95%)
+location_ci <- quantile(bootstrap_estimates[,1], c(0.025, 0.975))
+scale_ci <- quantile(bootstrap_estimates[,2], c(0.025, 0.975))
+
+# Spausdiname rezultatus
+cat("Bootstrap 95% pasikliautini intervalai:\n")
+cat("Location (μ): [", round(location_ci[1], 4), ", ", round(location_ci[2], 4), "]\n")
+cat("Scale (σ): [", round(scale_ci[1], 4), ", ", round(scale_ci[2], 4), "]\n")
+```
+
+```{r}
+# Momentų metodo įvertiniai x1 imčiai (n=20)
+MM_logistic(x1)
+
+# Momentų metodo įvertiniai x2 imčiai (n=50)
+MM_logistic(x2)
+
+# Momentų metodo įvertiniai x3 imčiai (n=200)
+MM_logistic(x3)
+
+# Momentų metodo įvertiniai x4 imčiai (n=1000)
+MM_logistic(x4)
+
+```
+
+------------------------------------------------------------------------
+
+Momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
+
+```{r}
+
+set.seed(58)
+rand_logistic <- rlogis(x1, location = 4, scale = 2 )
+
+m_logistic <- mean(rand_logistic)
+s_logistic <- var(rand_logistic)
+
+#MM
+hat_mu <- m_logistic
+hat_s <- sqrt(3 * s_logistic / pi^2)
+hat_mu
+hat_s
+```
+
+```{r}
+set.seed(58)
+rand_logistic <- rlogis(x2, location = 4, scale = 2 )
+
+m_logistic <- mean(rand_logistic)
+s_logistic <- var(rand_logistic)
+
+#MM
+hat_mu <- m_logistic
+hat_s <- sqrt(3 * s_logistic / pi^2)
+hat_mu
+hat_s
+```
+
+```{r}
+set.seed(58)
+rand_logistic <- rlogis(x3, location = 4, scale = 2 )
+
+m_logistic <- mean(rand_logistic)
+s_logistic <- var(rand_logistic)
+
+#MM
+hat_mu <- m_logistic
+hat_s <- sqrt(3 * s_logistic / pi^2)
+hat_mu
+hat_s
+```
+
+```{r}
+set.seed(58)
+rand_logistic <- rlogis(x4, location = 4, scale = 2 )
+
+m_logistic <- mean(rand_logistic)
+s_logistic <- var(rand_logistic)
+
+#MM
+hat_mu <- m_logistic
+hat_s <- sqrt(3 * s_logistic / pi^2)
+hat_mu
+hat_s
+```
+
+### 8. Didžiausio tikėtinumo metodo parametrų įverčiai 6 dalyje sugeneruotoms imtims.
+
+n = 20
+
+```{r}
+library(maxLik)
+
+logLikFun <- function(param) {
+  location <- param[1]
+  scale <- param[2]
+  sum(dlogis(x1, location = location,
+            scale = scale, log = TRUE))
+}
+mle <- maxLik(logLik = logLikFun,
+              start = c(location = 0, scale = 1))
+summary(mle)
+coef(mle)
+stdEr(mle)
+
+```
+
+n = 50
+
+```{r}
+
+logLikFun <- function(param) {
+  location <- param[1]
+  scale <- param[2]
+  sum(dlogis(x2, location = location,
+             scale = scale, log = TRUE))
+}
+mle <- maxLik(logLik = logLikFun,
+              start = c(location = 0, scale = 1))
+summary(mle)
+coef(mle)
+stdEr(mle)
+
+```
+
+n = 200
+
+```{r}
+logLikFun <- function(param) {
+  location <- param[1]
+  scale <- param[2]
+  sum(dlogis(x3, location = location,
+             scale = scale, log = TRUE))
+}
+mle <- maxLik(logLik = logLikFun,
+              start = c(location = 0, scale = 1))
+summary(mle)
+coef(mle)
+stdEr(mle)
+
+```
+
+n = 1000
+
+```{r}
+logLikFun <- function(param) {
+  location <- param[1]
+  scale <- param[2]
+  sum(dlogis(x4, location = location,
+             scale = scale, log = TRUE))
+}
+mle <- maxLik(logLik = logLikFun,
+              start = c(location = 0, scale = 1))
+summary(mle)
+coef(mle)
+stdEr(mle)
+
+```
+
+### 9. 7 ir 8 dalyse gautų įverčių palyginimas su tikraisiais parametrais.
+
+```{r}
+library(knitr)
+
+# Ištraukiame momentų metodo (MM) rezultatus
+mm_results <- data.frame(
+  Sample_Size = c(20, 50, 200, 1000),
+  Location_True = rep(4, 4),
+  Location_MM = c(MM_logistic(x1)[1], MM_logistic(x2)[1], 
+                 MM_logistic(x3)[1], MM_logistic(x4)[1]),
+  Scale_True = rep(2, 4),
+  Scale_MM = c(MM_logistic(x1)[2], MM_logistic(x2)[2], 
+              MM_logistic(x3)[2], MM_logistic(x4)[2])
+)
+
+# Pridedame absoliučias MM paklaidas
+mm_results$Location_MM_Error <- abs(mm_results$Location_MM - mm_results$Location_True)
+mm_results$Scale_MM_Error <- abs(mm_results$Scale_MM - mm_results$Scale_True)
+
+# Jungiame MM ir MLE rezultatus
+comparison <- data.frame(
+  Sample_Size = mm_results$Sample_Size,
+  
+  # Vietos parametras (μ)
+  Location_True = mm_results$Location_True,
+  Location_MM = mm_results$Location_MM,
+  Location_MLE = mle_results$Location_MLE,
+  Location_MM_Error = mm_results$Location_MM_Error,
+  Location_MLE_Error = mle_results$Location_Error,
+  
+  # Skalės parametras (σ)
+  Scale_True = mm_results$Scale_True,
+  Scale_MM = mm_results$Scale_MM,
+  Scale_MLE = mle_results$Scale_MLE,
+  Scale_MM_Error = mm_results$Scale_MM_Error,
+  Scale_MLE_Error = mle_results$Scale_Error
+)
+
+# Pateikiame palyginimą lentelės forma
+kable(comparison,
+      caption = "MM ir MLE įvertinių palyginimas logistiniam skirstiniui",
+      col.names = c(
+        "Imties dydis", 
+        "μ tikroji", "μ (MM)", "μ (MLE)", 
+        "μ MM paklaida", "μ MLE paklaida",
+        "σ tikroji", "σ (MM)", "σ (MLE)", 
+        "σ MM paklaida", "σ MLE paklaida"
+      ),
+      digits = 4)
+```
+
+### 10. Parametrų pasikliautiniai intervalai bei jų apskaičiavimas 6 dalyje sugeneruotiems duomenims.
+
+```{r}
+## Bootstrap metodas
+# Nustatome parametrus
+m <- 500 # bootstrap imčių skaičius
+set.seed(58) # tas pats seed kaip ir generuojant duomenis
+
+# Bootstrap pasikliautiniai intervalai location parametrui (μ)
+bootstrap_loc1 <- replicate(m, mean(sample(x1, size = length(x1), replace = TRUE)))
+bootstrap_loc2 <- replicate(m, mean(sample(x2, size = length(x2), replace = TRUE)))
+bootstrap_loc3 <- replicate(m, mean(sample(x3, size = length(x3), replace = TRUE)))
+bootstrap_loc4 <- replicate(m, mean(sample(x4, size = length(x4), replace = TRUE)))
+
+# Bootstrap pasikliautiniai intervalai scale parametrui (σ)
+# Naudojame momentų metodo įvertinį σ = sqrt(3 * var(x) / π²)
+bootstrap_scale1 <- replicate(m, sqrt(3 * var(sample(x1, size = length(x1), replace = TRUE)) / pi^2))
+bootstrap_scale2 <- replicate(m, sqrt(3 * var(sample(x2, size = length(x2), replace = TRUE)) / pi^2))
+bootstrap_scale3 <- replicate(m, sqrt(3 * var(sample(x3, size = length(x3), replace = TRUE)) / pi^2))
+bootstrap_scale4 <- replicate(m, sqrt(3 * var(sample(x4, size = length(x4), replace = TRUE)) / pi^2))
+
+# Apskaičiuojame 95% pasikliautinus intervalus bootstrap metodu
+ci_loc1 <- quantile(bootstrap_loc1, c(0.025, 0.975))
+ci_loc2 <- quantile(bootstrap_loc2, c(0.025, 0.975))
+ci_loc3 <- quantile(bootstrap_loc3, c(0.025, 0.975))
+ci_loc4 <- quantile(bootstrap_loc4, c(0.025, 0.975))
+
+ci_scale1 <- quantile(bootstrap_scale1, c(0.025, 0.975))
+ci_scale2 <- quantile(bootstrap_scale2, c(0.025, 0.975))
+ci_scale3 <- quantile(bootstrap_scale3, c(0.025, 0.975))
+ci_scale4 <- quantile(bootstrap_scale4, c(0.025, 0.975))
+
+# Sukuriame rezultatų lentelę
+library(knitr)
+bootstrap_results <- data.frame(
+  Parameter = rep(c("Location (μ)", "Scale (σ)"), each=4),
+  Sample_Size = rep(c(20, 50, 200, 1000), 2),
+  True_Value = rep(c(4, 2), each=4),
+  Estimate = c(
+    mean(x1), mean(x2), mean(x3), mean(x4),
+    sqrt(3 * var(x1) / pi^2), sqrt(3 * var(x2) / pi^2), 
+    sqrt(3 * var(x3) / pi^2), sqrt(3 * var(x4) / pi^2)
+  ),
+  CI_Lower = c(ci_loc1[1], ci_loc2[1], ci_loc3[1], ci_loc4[1],
+              ci_scale1[1], ci_scale2[1], ci_scale3[1], ci_scale4[1]),
+  CI_Upper = c(ci_loc1[2], ci_loc2[2], ci_loc3[2], ci_loc4[2],
+              ci_scale1[2], ci_scale2[2], ci_scale3[2], ci_scale4[2])
+)
+bootstrap_results
+```
+
+### 11. Kvartilių apskaičiavimas 6 dalyje sugeneruotiems duomenims.
+
+imtis n = 20
+
+```{r}
+quantile_x1 <- quantile(x1, probs = c(0.25, 0.5, 0.75))
+quantile_x1
+```
+
+imtis n = 50
+
+```{r}
+quantile_x2 <- quantile(x2, probs = c(0.25, 0.5, 0.75))
+quantile_x2
+```
+
+imtis n = 200
+
+```{r}
+quantile_x3 <- quantile(x3, probs = c(0.25, 0.5, 0.75))
+quantile_x3
+```
+
+imtis n = 1000
+
+```{r}
+quantile_x4 <- quantile(x4, probs = c(0.25, 0.5, 0.75))
+quantile_x4
+```
+
+### 12. Pridedami 5 išsiskiriantys stebėjimai 6 dalyje sugeneruotiems duomenims.
+
+```{r}
+
+set.seed(58)
+x11 <- sample(c(x1, 30, 50 ,60, 70, 80))
+set.seed(58)
+x22 <- sample(c(x2, 30, 50 ,60, 70, 80))
+set.seed(58)
+x33 <- sample(c(x3, 30, 50 ,60, 70, 80))
+set.seed(58)
+x44 <- sample(c(x4,30, 50 ,60, 70, 80))
+
+table(x1)
+table(x11)
+
+```
+
+```{r}
+table(x2)
+table(x22)
+```
+
+```{r}
+table(x3)
+table(x33)
+```
+
+```{r}
+table(x4)
+table(x44)
+```
+
+### 13. Stačiakampės diagramos.
+
+```{r}
+outliers_x11 <- boxplot(x11)$out
+```
+
+```{r}
+outliers_x22 <- boxplot(x22)$out
+```
+
+```{r}
+outliers_x33 <- boxplot(x33)$out
+```
+
+```{r}
+outliers_x44 <- boxplot(x44)$out
+```
+
+```{r}
+# Atspausdinti visas išskirtis
+cat("x11 išskirtys:", outliers_x11, "\n")
+cat("x22 išskirtys:", outliers_x22, "\n")
+cat("x33 išskirtys:", outliers_x33, "\n")
+cat("x44 išskirtys:", outliers_x44, "\n")
+
+# Patikrinti, ar pridėtos išskirtys (30, 50, 60, 70, 80) yra identifikuojamos
+expected_outliers <- c(30, 50, 60, 70, 80)
+
+cat("\nAr visos pridėtos išskirtys identifikuojamos?\n")
+cat("x11:", all(expected_outliers %in% outliers_x11), "\n")
+cat("x22:", all(expected_outliers %in% outliers_x22), "\n")
+cat("x33:", all(expected_outliers %in% outliers_x33), "\n")
+cat("x44:", all(expected_outliers %in% outliers_x44), "\n")
+```
+
+1-oji, 2-oji ir 3-oji stačiakampės diagramos neidentifikuoja visų pridėtų išskirčių, o 4-oji stačiakampė diagrama jas identifikuoja.
+
+## 14. 6 dalyje sugeneruotų duomenų histogramų (tikimybes) palyginimas su normaliojo skirstinio tankiu (Puasono skirstinio tikimybėmis).
+
+```{r}
+library(ggplot2)
+
+# Parametrai normaliam skirstiniui
+location <- 4  
+scale_normal <- sd(x4)  # standartinis nuokrypis iš didžiausios imties
+
+# Sukuriame funkcijas normaliojo ir logistinio tankio skaičiavimui
+norm_dens <- function(x) dnorm(x, mean=location, sd=scale_normal)
+logis_dens <- function(x) dlogis(x, location=location, scale=2)
+
+# Imtis n=20
+ggplot(data.frame(x1), aes(x=x1)) +
+  geom_histogram(aes(y=after_stat(density)), binwidth=0.5, 
+                 fill="lightblue", color="white", alpha=0.7) +
+  stat_function(fun=norm_dens, geom="line", 
+                aes(color="Normalusis"), linewidth=1.2, linetype="dashed") +
+  stat_function(fun=logis_dens, geom="line", 
+                aes(color="Logistinis"), linewidth=1.2) +
+  scale_color_manual(values=c("Normalusis"="blue", "Logistinis"="red")) +
+  labs(title="Logistinis vs normalusis (n=20)",
+       x="Reikšmė", y="Tankis",
+       color="Skirstinys") +
+  theme_minimal() +
+  theme(legend.position="top")
+```
+
+```{r}
+# Imtis n=1000
+ggplot(data.frame(x4), aes(x=x4)) +
+  geom_histogram(aes(y=after_stat(density)), binwidth=0.5,
+                 fill="lightblue", color="white", alpha=0.7) +
+  stat_function(fun=norm_dens, geom="line", 
+                aes(color="Normalusis"), linewidth=1.2, linetype="dashed") +
+  stat_function(fun=logis_dens, geom="line", 
+                aes(color="Logistinis"), linewidth=1.2) +
+  scale_color_manual(values=c("Normalusis"="blue", "Logistinis"="red")) +
+  labs(title="Logistinis vs normalusis (n=1000)",
+       x="Reikšmė", y="Tankis",
+       color="Skirstinys") +
+  theme_minimal() +
+  theme(legend.position="top")
+```
+
+### 15. Papildoma užduotis
+
+Duomenys iš: <https://www.sciencedirect.com/science/article/pii/S2352340918300283?via%3Dihub>
+
+Reakcijos laiko duomenys buvo surinkti naudojant specialiai sukurtą lentą, kurios keturiuose kampuose buvo po LED lemputę ir mygtuką. Dalyvio buvo prašoma kuo greičiau paspausti mygtuką, prie kurio įsižiebė LED lemputė. Duomenys atitinka kiekvieno dalyvio vidutinį reakcijos laiką, apskaičiuotą iš 16 bandymų.
+
+```{r}
+duom <- read.csv("reaction_times.csv")
+
+x <- seq(200, 1600)
+vid <- mean(duom$time)
+scale <- sd(duom$time) / 1.8138
+
+hist(duom$time, breaks = seq(200, 1600, by = 20), prob = TRUE,
+     main="Dalyvių pagal vidutinį reakcijos laiką pasiskirstymas",
+     xlab="Vidutinis reakcijos laikas (ms)",
+     ylab="Tankis")
+lines(x, dlogis(x, location = vid, scale = scale), col = 2, lwd = 2)
+lines(x, dnorm(x, vid, sd(duom$time)), col = 4, lwd = 2)
+legend(200, 0.004, legend=c("Logistinis", "Normalusis"),
+       col=c(2, 4), lty=1:1, cex=0.8)
+```
+
+Lyginant normalųjį ir logistinį skirstinius matome, kad pastarasis tiksliau atitinka duomenų pasiskirstymą:
+
+-   Viršūnė yra aukščiau nei normaliojo ir arčiau histogramos formos;
+
+-   Logistinio skirstinio uodegos geriau atspindi retesnius reakcijos laikus.
