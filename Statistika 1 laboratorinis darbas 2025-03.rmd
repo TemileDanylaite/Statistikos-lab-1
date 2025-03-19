@@ -378,16 +378,6 @@ bootstrap_estimates <- t(apply(bootstrap_samples, 2, MM_logistic))
 ```
 
 ```{r}
-# Vizualizuojame bootstrap rezultatus
-par(mfrow=c(1,2))
-boxplot(bootstrap_estimates[,1], main = "Location (μ)", col = "lightblue")
-abline(h = 4, col = "red", lty = 2)  # Tikroji μ reikšmė
-boxplot(bootstrap_estimates[,2], main = "Scale (σ)", col = "lightgreen")
-abline(h = 2, col = "red", lty = 2)  # Tikroji σ reikšmė
-par(mfrow=c(1,1))
-```
-
-```{r}
 # Skaičiuojame bootstrap pasikliautinus intervalus (95%)
 location_ci <- quantile(bootstrap_estimates[,1], c(0.025, 0.975))
 scale_ci <- quantile(bootstrap_estimates[,2], c(0.025, 0.975))
@@ -399,80 +389,31 @@ cat("Scale (σ): [", round(scale_ci[1], 4), ", ", round(scale_ci[2], 4), "]\n")
 ```
 
 ```{r}
-# Momentų metodo įvertiniai x1 imčiai (n=20)
+# Momentų) metodo įvertiniai x1 imčiai (n=20)
+
+set.seed(58)
 MM_logistic(x1)
+```
 
+```{r}
 # Momentų metodo įvertiniai x2 imčiai (n=50)
+set.seed(58)
 MM_logistic(x2)
+```
 
+```{r}
 # Momentų metodo įvertiniai x3 imčiai (n=200)
+set.seed(58)
 MM_logistic(x3)
+```
 
+```{r}
 # Momentų metodo įvertiniai x4 imčiai (n=1000)
+set.seed(58)
 MM_logistic(x4)
-
 ```
 
 ------------------------------------------------------------------------
-
-Momentų metodo įverčiai 6 dalyje sugeneruotoms imtims.
-
-```{r}
-
-set.seed(58)
-rand_logistic <- rlogis(x1, location = 4, scale = 2 )
-
-m_logistic <- mean(rand_logistic)
-s_logistic <- var(rand_logistic)
-
-#MM
-hat_mu <- m_logistic
-hat_s <- sqrt(3 * s_logistic / pi^2)
-hat_mu
-hat_s
-```
-
-```{r}
-set.seed(58)
-rand_logistic <- rlogis(x2, location = 4, scale = 2 )
-
-m_logistic <- mean(rand_logistic)
-s_logistic <- var(rand_logistic)
-
-#MM
-hat_mu <- m_logistic
-hat_s <- sqrt(3 * s_logistic / pi^2)
-hat_mu
-hat_s
-```
-
-```{r}
-set.seed(58)
-rand_logistic <- rlogis(x3, location = 4, scale = 2 )
-
-m_logistic <- mean(rand_logistic)
-s_logistic <- var(rand_logistic)
-
-#MM
-hat_mu <- m_logistic
-hat_s <- sqrt(3 * s_logistic / pi^2)
-hat_mu
-hat_s
-```
-
-```{r}
-set.seed(58)
-rand_logistic <- rlogis(x4, location = 4, scale = 2 )
-
-m_logistic <- mean(rand_logistic)
-s_logistic <- var(rand_logistic)
-
-#MM
-hat_mu <- m_logistic
-hat_s <- sqrt(3 * s_logistic / pi^2)
-hat_mu
-hat_s
-```
 
 ### 8. Didžiausio tikėtinumo metodo parametrų įverčiai 6 dalyje sugeneruotoms imtims.
 
@@ -773,6 +714,40 @@ ggplot(data.frame(x1), aes(x=x1)) +
                 aes(color="Logistinis"), linewidth=1.2) +
   scale_color_manual(values=c("Normalusis"="blue", "Logistinis"="red")) +
   labs(title="Logistinis vs normalusis (n=20)",
+       x="Reikšmė", y="Tankis",
+       color="Skirstinys") +
+  theme_minimal() +
+  theme(legend.position="top")
+```
+
+```{r}
+# Imtis n=50
+ggplot(data.frame(x2), aes(x=x2)) +
+  geom_histogram(aes(y=after_stat(density)), binwidth=0.5,
+                 fill="lightblue", color="white", alpha=0.7) +
+  stat_function(fun=norm_dens, geom="line", 
+                aes(color="Normalusis"), linewidth=1.2, linetype="dashed") +
+  stat_function(fun=logis_dens, geom="line", 
+                aes(color="Logistinis"), linewidth=1.2) +
+  scale_color_manual(values=c("Normalusis"="blue", "Logistinis"="red")) +
+  labs(title="Logistinis vs normalusis (n=50)",
+       x="Reikšmė", y="Tankis",
+       color="Skirstinys") +
+  theme_minimal() +
+  theme(legend.position="top")
+```
+
+```{r}
+# Imtis n=200
+ggplot(data.frame(x3), aes(x=x3)) +
+  geom_histogram(aes(y=after_stat(density)), binwidth=0.5,
+                 fill="lightblue", color="white", alpha=0.7) +
+  stat_function(fun=norm_dens, geom="line", 
+                aes(color="Normalusis"), linewidth=1.2, linetype="dashed") +
+  stat_function(fun=logis_dens, geom="line", 
+                aes(color="Logistinis"), linewidth=1.2) +
+  scale_color_manual(values=c("Normalusis"="blue", "Logistinis"="red")) +
+  labs(title="Logistinis vs normalusis (n=200)",
        x="Reikšmė", y="Tankis",
        color="Skirstinys") +
   theme_minimal() +
